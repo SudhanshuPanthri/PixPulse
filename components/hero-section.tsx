@@ -6,6 +6,8 @@ import Header from "./header";
 import { IconBrandGithub } from "@tabler/icons-react";
 import Link from "next/link";
 import { InfoSection } from "./info-section";
+import { StepByStepSection } from "./step-by-step-section";
+import Footer from "./ui/footer";
 
 export default function HeroSection() {
   return (
@@ -70,9 +72,12 @@ export default function HeroSection() {
           }}
           className="relative z-10 mt-8 flex flex-wrap items-center justify-center gap-4"
         >
-          <button className="w-60 transform rounded-lg bg-black px-6 py-2 font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200">
+          <Link
+            href="/upload"
+            className="w-60 flex items-center justify-center transform rounded-lg bg-black px-6 py-2 font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+          >
             Explore Now
-          </button>
+          </Link>
           <Link
             href="https://github.com/SudhanshuPanthri/PixPulse"
             target="_blank"
@@ -108,6 +113,13 @@ export default function HeroSection() {
         </motion.div>
       </div>
       <InfoSection />
+      <div className="w-full flex items-center justify-center mt-20">
+        <h1 className="text-xl font-bold md:text-2xl lg:text-5xl">
+          How PixPulse Works
+        </h1>
+      </div>
+      <StepByStepSection />
+      <Footer />
     </div>
   );
 }
