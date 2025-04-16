@@ -70,9 +70,28 @@ export function Button({ file }: buttonProps) {
         }
 
         const { message } = await openAIResponse.json();
-        //once we receive the response from open ai
-        //pass it to grounding dino
         console.log("Image detected successfully", message.content);
+        let labels: string[];
+        labels = message.content;
+        console.log({
+          file_url: data.secure_url,
+          labels,
+        });
+
+        const replicateResponse = await fetch("/api/detect", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ fileUrl: data.secure_url }),
+        });
+
+        if (!replicateResponse.ok) {
+          throw new Error("Failed to process image with Replicate");
+        }
+        const detections = await replicateResponse.json();
+        console.log(detections);
+        console.log("Replicate response", detections.result);
 
         console.log("File uploaded successfully", data);
       } else {
