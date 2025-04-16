@@ -53,6 +53,27 @@ export function Button({ file }: buttonProps) {
       if (cloudinaryResponse.ok) {
         const data = await cloudinaryResponse.json();
         setUploadUrl(data.secure_url);
+        //got the url
+        //pass the url to open ai to detect the iamge
+        //also implemnt loading state
+        //openai service
+        const openAIResponse = await fetch("/api/open-ai", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ fileUrl: data.secure_url }),
+        });
+
+        if (!openAIResponse.ok) {
+          throw new Error("Failed to detect image");
+        }
+
+        const { message } = await openAIResponse.json();
+        //once we receive the response from open ai
+        //pass it to grounding dino
+        console.log("Image detected successfully", message.content);
+
         console.log("File uploaded successfully", data);
       } else {
         console.log("Failed to upload file", cloudinaryResponse.statusText);
