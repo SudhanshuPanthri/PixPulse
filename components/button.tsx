@@ -56,10 +56,7 @@ export function Button({ file }: buttonProps) {
       if (cloudinaryResponse.ok) {
         const data = await cloudinaryResponse.json();
         setUploadUrl(data.secure_url);
-        //get the url
-        //pass the url to open ai to detect the iamge
-        //also implemnt loading state
-        //openai service
+
         const openAIResponse = await fetch("/api/open-ai", {
           method: "POST",
           headers: {
@@ -73,13 +70,8 @@ export function Button({ file }: buttonProps) {
         }
 
         const { message } = await openAIResponse.json();
-        console.log("Image detected successfully", message.content);
         let labels: string[];
         labels = message.content;
-        console.log({
-          file_url: data.secure_url,
-          labels,
-        });
 
         const replicateResponse = await fetch("/api/detect", {
           method: "POST",
@@ -93,10 +85,13 @@ export function Button({ file }: buttonProps) {
           throw new Error("Failed to process image with Replicate");
         }
         const detections = await replicateResponse.json();
-        console.log("Replicate response", detections.result);
         //set the result in localstorage => TODO - delete immediately when user went back
         localStorage.setItem("detections", JSON.stringify(detections.result));
-        router.push(`/result?imageUrl=${encodeURIComponent(data.secure_url)}`);
+        router.push(
+          `/result?imageUrl=${encodeURIComponent(data.secure_url)}&public_id=${
+            data.public_id
+          }`
+        );
       } else {
         console.log("Failed to upload file", cloudinaryResponse.statusText);
       }

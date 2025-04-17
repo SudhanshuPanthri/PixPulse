@@ -9,6 +9,7 @@ import useImage from "use-image";
 const ImagePage = () => {
   const searchParams = useSearchParams();
   const imageUrl = searchParams.get("imageUrl");
+  const publicId = searchParams.get("public_id");
   const [display, setDisplay] = useState(false);
   if (imageUrl == null) {
     redirect("/upload");
@@ -19,8 +20,22 @@ const ImagePage = () => {
     width: 800,
     height: 600,
   });
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
+  const handleDelete = async () => {
+    const deleteResponse = await fetch("/api/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ publicId: publicId }),
+    });
+    console.log(deleteResponse);
+  };
 
   useEffect(() => {
+    console.log(publicId);
     if (image) {
       const img = new Image();
       img.src = imageUrl!;
@@ -28,11 +43,15 @@ const ImagePage = () => {
         setImageDimensions({ width: img.width, height: img.height });
       };
 
-      setTimeout(() => {
+      const handleAsyncTimeouts = async () => {
+        await delay(5000);
         setDisplay(true);
-      }, 8000);
+        await delay(2000);
+        await handleDelete();
+      };
+      handleAsyncTimeouts();
     }
-  });
+  }, [image]);
   if (!detections) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
