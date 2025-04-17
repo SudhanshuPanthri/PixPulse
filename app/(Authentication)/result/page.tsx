@@ -12,8 +12,9 @@ const ImagePage = () => {
   const publicId = searchParams.get("public_id");
   const [display, setDisplay] = useState(false);
   const router = useRouter();
-  if (imageUrl == null) {
+  if (!imageUrl) {
     router.push("/upload");
+    return null;
   }
   const [image] = useImage(imageUrl || "");
   const detections = JSON.parse(localStorage.getItem("detections") || "[]");
