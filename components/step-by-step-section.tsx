@@ -11,7 +11,7 @@ export function StepByStepSection() {
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
           <p>Upload Image</p>
-          <DummyContent />
+          <DummyContent src="/image.png" />
         </div>
       ),
     },
@@ -21,7 +21,7 @@ export function StepByStepSection() {
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
           <p>Open AI processes the image</p>
-          <DummyContent />
+          <DummyContent src="/image-1.png" />
         </div>
       ),
     },
@@ -31,17 +31,7 @@ export function StepByStepSection() {
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
           <p>Facebook detr-resnet-50 detect contents</p>
-          <DummyContent />
-        </div>
-      ),
-    },
-    {
-      title: "Step 4",
-      value: "step4",
-      content: (
-        <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
-          <p>Detected Contents get shown on the UI</p>
-          <DummyContent />
+          <DummyContent src="/image-2.png" />
         </div>
       ),
     },
@@ -55,10 +45,10 @@ export function StepByStepSection() {
 }
 
 //TODO-Pass imageurl as prop to this component
-const DummyContent = () => {
+const DummyContent = ({ src }: { src: string }) => {
   return (
     <Image
-      src="/image.png"
+      src={src}
       alt="dummy image"
       width="1000"
       height="1000"
