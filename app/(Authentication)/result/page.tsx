@@ -1,7 +1,7 @@
 "use client";
 import { SparkleCard } from "@/components/card";
 import Header from "@/components/header";
-import { redirect, useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Stage, Layer, Rect, Image as KonvaImage, Text } from "react-konva";
 import useImage from "use-image";
@@ -11,10 +11,11 @@ const ImagePage = () => {
   const imageUrl = searchParams.get("imageUrl");
   const publicId = searchParams.get("public_id");
   const [display, setDisplay] = useState(false);
+  const router = useRouter();
   if (imageUrl == null) {
-    redirect("/upload");
+    router.push("/upload");
   }
-  const [image] = useImage(imageUrl);
+  const [image] = useImage(imageUrl || "");
   const detections = JSON.parse(localStorage.getItem("detections") || "[]");
   const [imageDimensions, setImageDimensions] = useState({
     width: 800,

@@ -2,9 +2,8 @@
 import { animate, motion } from "motion/react";
 import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 
-export function SparkleCard({ fileUrl }: { fileUrl: string }) {
+export function SparkleCard({ fileUrl }: { fileUrl: string | null }) {
   return (
     <Card>
       <CardSkeletonContainer>
@@ -18,7 +17,7 @@ export function SparkleCard({ fileUrl }: { fileUrl: string }) {
   );
 }
 
-const Skeleton = ({ fileUrl }: { fileUrl: string }) => {
+const Skeleton = ({ fileUrl }: { fileUrl: string | null }) => {
   const scale = [1, 1.1, 1];
   const transform = ["translateY(0px)", "translateY(-4px)", "translateY(0px)"];
   const sequence = [
@@ -74,7 +73,7 @@ const Skeleton = ({ fileUrl }: { fileUrl: string }) => {
   return (
     <div className="p-8 overflow-hidden h-full relative flex items-center justify-center">
       <div className="flex flex-row shrink-0 justify-center items-center gap-2">
-        <img src={fileUrl} alt="image" />
+        <img src={fileUrl || ""} alt="image" />
       </div>
 
       <div className="h-40 w-px absolute top-20 m-auto z-40 bg-gradient-to-b from-transparent via-cyan-500 to-transparent animate-move">
