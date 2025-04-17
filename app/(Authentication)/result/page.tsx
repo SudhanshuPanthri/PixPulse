@@ -2,7 +2,7 @@
 import { SparkleCard } from "@/components/card";
 import Header from "@/components/header";
 import { useSearchParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { Stage, Layer, Rect, Image as KonvaImage, Text } from "react-konva";
 import useImage from "use-image";
 
@@ -12,16 +12,19 @@ const ImagePage = () => {
   const publicId = searchParams.get("public_id");
   const [display, setDisplay] = useState(false);
   const router = useRouter();
+
   if (!imageUrl) {
     router.push("/upload");
-    return null;
+    return null; // Prevent further rendering
   }
+
   const [image] = useImage(imageUrl || "");
   const detections = JSON.parse(localStorage.getItem("detections") || "[]");
   const [imageDimensions, setImageDimensions] = useState({
     width: 800,
     height: 600,
   });
+
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -37,7 +40,6 @@ const ImagePage = () => {
   };
 
   useEffect(() => {
-    console.log(publicId);
     if (image) {
       const img = new Image();
       img.src = imageUrl!;
@@ -54,7 +56,8 @@ const ImagePage = () => {
       handleAsyncTimeouts();
     }
   }, [image]);
-  if (!detections) {
+
+  if (detections.length === 0) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <h1 className="text-2xl font-bold text-slate-700 dark:text-slate-300">
@@ -87,9 +90,8 @@ const ImagePage = () => {
             <Layer>
               <KonvaImage image={image} width={800} height={600} />
               {detections.map((detection: any, index: number) => (
-                <>
+                <React.Fragment key={index}>
                   <Rect
-                    key={index}
                     x={detection.box.xmin * scaleX}
                     y={detection.box.ymin * scaleY}
                     width={(detection.box.xmax - detection.box.xmin) * scaleX}
@@ -104,7 +106,6 @@ const ImagePage = () => {
                     shadowOpacity={0.5}
                   />
                   <Text
-                    key={index + 100}
                     x={detection.box.xmin * scaleX + 5}
                     y={detection.box.ymin * scaleY - 20}
                     text={`${detection.label} (${(
@@ -115,7 +116,7 @@ const ImagePage = () => {
                     fontStyle="bold"
                     wrap="word"
                   />
-                </>
+                </React.Fragment>
               ))}
             </Layer>
           </Stage>
@@ -132,7 +133,7 @@ const ImagePage = () => {
                 }`}
                 key={index}
               >
-                {detection.label} - {detection.score.toFixed(2) * 100}
+                {detection.label} - {(detection.score * 100).toFixed(2)}%
               </div>
             ))}
           </div>
@@ -142,4 +143,12 @@ const ImagePage = () => {
   );
 };
 
-export default ImagePage;
+const ImagePageWrapper = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ImagePage />
+    </Suspense>
+  );
+};
+
+export default ImagePageWrapper;
