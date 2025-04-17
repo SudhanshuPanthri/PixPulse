@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
+import { IconLoader } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 
 type buttonProps = {
   file: File | null;
@@ -9,6 +11,7 @@ type buttonProps = {
 export function Button({ file }: buttonProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadUrl, setUploadUrl] = useState<string | null>(null);
+  const router = useRouter();
   const handleUpload = async () => {
     if (!file) {
       console.log("No file selected");
@@ -53,7 +56,7 @@ export function Button({ file }: buttonProps) {
       if (cloudinaryResponse.ok) {
         const data = await cloudinaryResponse.json();
         setUploadUrl(data.secure_url);
-        //got the url
+        //get the url
         //pass the url to open ai to detect the iamge
         //also implemnt loading state
         //openai service
@@ -90,10 +93,10 @@ export function Button({ file }: buttonProps) {
           throw new Error("Failed to process image with Replicate");
         }
         const detections = await replicateResponse.json();
-        console.log(detections);
         console.log("Replicate response", detections.result);
-
-        console.log("File uploaded successfully", data);
+        //set the result in localstorage => TODO - delete immediately when user went back
+        localStorage.setItem("detections", JSON.stringify(detections.result));
+        router.push(`/result?imageUrl=${encodeURIComponent(data.secure_url)}`);
       } else {
         console.log("Failed to upload file", cloudinaryResponse.statusText);
       }
@@ -109,33 +112,15 @@ export function Button({ file }: buttonProps) {
       <HoverBorderGradient
         containerClassName="rounded-full"
         as="button"
-        className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2 cursor-pointer"
+        className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2 cursor-pointer w-40 justify-center"
         onClick={handleUpload}
       >
-        <AceternityLogo />
-        <span>Upload</span>
+        {uploading ? (
+          <IconLoader className="h-4 w-4 animate-spin" />
+        ) : (
+          <span>Upload</span>
+        )}
       </HoverBorderGradient>
     </div>
   );
 }
-
-const AceternityLogo = () => {
-  return (
-    <svg
-      width="66"
-      height="65"
-      viewBox="0 0 66 65"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-3 w-3 text-black dark:text-white"
-    >
-      <path
-        d="M8 8.05571C8 8.05571 54.9009 18.1782 57.8687 30.062C60.8365 41.9458 9.05432 57.4696 9.05432 57.4696"
-        stroke="currentColor"
-        strokeWidth="15"
-        strokeMiterlimit="3.86874"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-};

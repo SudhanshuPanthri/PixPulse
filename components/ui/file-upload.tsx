@@ -1,9 +1,10 @@
 import { cn } from "@/lib/utils";
 import React, { useRef, useState } from "react";
 import { motion } from "motion/react";
-import { IconArrowRight, IconUpload } from "@tabler/icons-react";
+import { IconUpload } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "../button";
+import { SparkleCard } from "../card";
 
 const mainVariant = {
   initial: {
@@ -161,13 +162,6 @@ export const FileUpload = ({
                 )}
               </motion.div>
             )}
-
-            {/* {!files.length && (
-              <motion.div
-                variants={secondaryVariant}
-                className="absolute opacity-0 border border-dashed border-sky-400 inset-0 z-30 bg-transparent flex items-center justify-center h-32 mt-4 w-full max-w-[8rem] mx-auto rounded-md"
-              ></motion.div>
-            )} */}
           </div>
         </div>
       </motion.div>
