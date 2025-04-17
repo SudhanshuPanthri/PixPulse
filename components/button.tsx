@@ -86,7 +86,7 @@ export function Button({ file }: buttonProps) {
         });
 
         if (!replicateResponse.ok) {
-          toast.error("Failed to process image with Model");
+          toast.error("Failed to process image with Model. Please try again.");
           throw new Error("Failed to process image with Model");
         }
         toast.success("Thinking...");
@@ -115,6 +115,7 @@ export function Button({ file }: buttonProps) {
         as="button"
         className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2 cursor-pointer w-40 justify-center"
         onClick={handleUpload}
+        aria-disabled={uploading}
       >
         {uploading ? (
           <IconLoader className="h-4 w-4 animate-spin" />

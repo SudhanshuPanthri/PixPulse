@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { FileUpload } from "@/components/ui/file-upload";
 import Header from "@/components/header";
+import Notification from "@/components/notification";
 
 export default function UploadPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -14,6 +15,7 @@ export default function UploadPage() {
     <div className="w-full flex flex-col items-center justify-center border border-dashed bg-white dark:bg-black border-neutral-200 dark:border-neutral-800 rounded-lg">
       <Header />
       <FileUpload onChange={handleFileUpload} />
+      <Notification />
     </div>
   );
 }
