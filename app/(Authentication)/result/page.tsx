@@ -102,6 +102,7 @@ const ImagePage = () => {
                     shadowOpacity={0.5}
                   />
                   <Text
+                    key={index + 100}
                     x={detection.box.xmin * scaleX + 5}
                     y={detection.box.ymin * scaleY - 20}
                     text={`${detection.label} (${(

@@ -8,6 +8,7 @@ import Link from "next/link";
 import { InfoSection } from "./info-section";
 import { StepByStepSection } from "./step-by-step-section";
 import Footer from "./ui/footer";
+import { AboutModel } from "./about-model";
 
 export default function HeroSection() {
   return (
@@ -113,6 +114,7 @@ export default function HeroSection() {
         </motion.div>
       </div>
       <InfoSection />
+      <AboutModel />
       <div className="w-full flex items-center justify-center mt-20">
         <h1 className="text-xl font-bold md:text-2xl lg:text-5xl">
           How PixPulse Works

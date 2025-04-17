@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import { IconLoader } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type buttonProps = {
   file: File | null;
@@ -33,6 +34,7 @@ export function Button({ file }: buttonProps) {
       });
 
       if (!response.ok) {
+        toast.error("Failed to get signature");
         throw new Error("Failed to get signature");
       }
 
@@ -56,6 +58,7 @@ export function Button({ file }: buttonProps) {
       if (cloudinaryResponse.ok) {
         const data = await cloudinaryResponse.json();
         setUploadUrl(data.secure_url);
+        toast.success("Image uploaded successfully");
 
         const openAIResponse = await fetch("/api/open-ai", {
           method: "POST",
@@ -66,9 +69,10 @@ export function Button({ file }: buttonProps) {
         });
 
         if (!openAIResponse.ok) {
+          toast.error("Failed to detect image. Please try again.");
           throw new Error("Failed to detect image");
         }
-
+        toast.success("OpenAI detected the image successfully");
         const { message } = await openAIResponse.json();
         let labels: string[];
         labels = message.content;
@@ -82,8 +86,10 @@ export function Button({ file }: buttonProps) {
         });
 
         if (!replicateResponse.ok) {
-          throw new Error("Failed to process image with Replicate");
+          toast.error("Failed to process image with Model");
+          throw new Error("Failed to process image with Model");
         }
+        toast.success("Thinking...");
         const detections = await replicateResponse.json();
         //set the result in localstorage => TODO - delete immediately when user went back
         localStorage.setItem("detections", JSON.stringify(detections.result));
